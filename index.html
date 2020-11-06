@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+   <meta name="Author" content="Martin Poulter" />
+   <title>Cooperation Study</title>
+   <link rel="contents" href="pd.htm" />
+<style type="text/css"><!--
+body {margin:auto;background-color:white;color:black}
+H1,H2 {font-family:Verdana,sans-serif;color:Purple}
+H3 {font-family:Arial,sans-serif;color:Darkblue}
+LI {line-height:1.5}
+// -->
+</style>
+<style type="text/css" media="screen"><!--
+BODY {font-family:Arial,Helvetica,sans-serif;width:600px}
+h2 {font-family:Verdana,Helvetica,sans-serif;padding-top:0px}
+INPUT {border:#ccc 2px dotted;font-family:Arial,Helvetica,sans-serif;font-size:large}
+TEXTAREA {border:#ccc 2px dotted;font-family:Arial,Helvetica,sans-serif;padding:3pt;font-size:medium}
+INPUT.state {border:0px;font-family:Arial,Helvetica,sans-serif;font-size:18pt}
+INPUT.scores {border:0px;font-family:Arial,Helvetica,sans-serif;font-weight:bold}
+INPUT.moves {background-color:#ec9;border:#fb6 2px outset;font-size:16pt;vertical-align:top}
+button {background-color:aqua;border:blue 2px outset;font-size:22pt;vertical-align:top;text-align:center}
+// -->
+</style>
+
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+<script>
+function SubForm (){
+    $.ajax({
+        url:'https://api.apispreadsheets.com/data/2996/',
+        type:'post',
+        data:$("#dataform").serializeArray(),
+        success: function(){
+          alert("Your data has been correctly submitted. Thank you for participating ! You may close the page now")
+        },
+        error: function(){
+          alert("An error occurred : your data has not been transferred.")
+        }
+    });
+}
+</script>
+</head>
+<body onload="document.gameform.reset()">
+
+<h1> Cooperate or defect ? </h1>
+
+<h3>Welcome !</h3>
+
+<table cellspacing="1" border="1" cellpadding="3" style="float:right"><tr><td colspan="2" rowspan="2"> </td><th colspan="2" bgcolor="#eeeeee">Computer</th></tr>
+<tr><th bgcolor="#cccccc">C</th><th bgcolor="#cccccc">D</th></tr>
+<tr><th rowspan="2" bgcolor="#eeeeee">You</th><th bgcolor="#cccccc">C</th><td align="center">3 <sup> 3</sup></td><td align="center">0 <sup> 5</sup></td></tr>
+<tr><th bgcolor="#cccccc">D</th><td align="center">5 <sup> 0</sup></td><td align="center">1 <sup> 1</sup></td></tr>
+</table>
+
+<p> Welcome to this simulator of iterated cooperative behaviour. Here, you will be asked to repeatedly interact with the computer. For each round, you have two choices : cooperate with the computer (C), or defect (D).
+Both your score and the score of the computer depend on your behaviour and the behaviour of the computer following the adjacent table. <br />
+<br />
+And remember : as an individual, your goal is not to beat the computer (which, as a fellow being, is not necessarily your enemy), but to obtain the highest score for yourself. <br />
+<br />
+</p>
+
+<script language="JavaScript">
+var usrpayoff=0;
+var comppayoff=0;
+function gamemove(theform,move,dataform)
+{var count=theform.usrmove.value.length+1;
+if (count<21)
+	{var lastmove=theform.usrmove.value.charAt(count-2);
+	var compmove= Math.random()>0.5 ? 'C' :'D';
+	theform.usrmove.value=theform.usrmove.value+move;count++;
+	theform.state.value= count==21 ?'Game Over ' :'Ready for move '+count+' of 20';
+	theform.pcmove.value=theform.pcmove.value+compmove;
+	if (move=='C')
+		{usrpayoff= compmove=='C' ? 3 : 0;
+		comppayoff= compmove=='C' ? 3 : 5;
+        dataform.cooperation.value=dataform.cooperation.value-0+1;
+		}
+	else
+		{usrpayoff= compmove=='C' ? 5 : 1;
+		comppayoff= compmove=='C' ? 0 : 1;
+		}
+	theform.usrscore.value=theform.usrscore.value-0+usrpayoff;
+	theform.compscore.value=theform.compscore.value-0+comppayoff;
+	theform.comments.value='You played '+move+' and the computer played '+compmove+'. You got '+usrpayoff+' points while the computer got '+comppayoff+' points.';
+	}
+else
+	{alert('This game has ended. Please enter your pseudonym, biological sex at birth and birth weight below and click on the "Submit" button at the bottom to submit your results. \n \n If you wish to play and know more, please go to https://www.economicsnetwork.ac.uk/archive/poulter/pd.htm. Thank you for participating !')}
+}
+</script>
+<!-- This script created April 2003 by Martin Poulter for Economics LTSN
+http://www.economicsnetwork.ac.uk/          econ-network@bristol.ac.uk
+You may edit this code but please retain this notice.-->
+
+<h3>Let's play !</h3>
+
+<form id="gameform" name="gameform">
+<input type="text" name="state" id="state" class="state" value="Ready for move 1 of 20" size="40" /><br />
+<br />
+<textarea rows="2" cols="60" name="comments" id="comments" readonly="readonly">Make your first choice using the buttons below.</textarea>
+<p>
+
+Your Score so far: <input type="text" name="usrscore" id="usrscore" value="0" size="4" class="scores" readonly="readonly" /> Computer's Score so far: <input type="text" name="compscore" id="compscore" value="0" size="4" class="scores" readonly="readonly" /></p>
+
+
+<table border="0" cellpadding="0" cellspacing="0"><tr><td>Your moves: </td><td><input type="text" size="36" name="usrmove" value="" readonly="readonly" /><br /></td></tr>
+<tr><td>Computer's moves: </td><td><input type="text" size="36" name="pcmove" value="" style="border-top:0px" readonly="readonly" /><br /></td></tr></table>
+
+<p>Choose: <input type="button" value="Co-operate" class="moves" onclick="gamemove(this.form,'C',dataform)" onclick=/>
+<input type="button" value="Defect" class="moves" onclick="gamemove(this.form,'D',dataform)" /> <br />
+<br />
+<br />
+<br />
+</form>
+
+
+<h3>Personal data</h3>
+
+<form id="dataform" name="dataform">
+    <p> Now, please tell us more about yourself ! </p> <br />
+    Pseudonym (Please do not <br />
+    enter your real name):          <input type="text" size="10" maxlength="60" name="pseudo" /> <br />
+    <br />
+    Biological Sex:                 Female <input type="radio" name="sex" value="Female" />     Male <input type="radio" name="sex" value="Male" style:"right" /> <br />
+    <br />
+    Birth weight:                   <input type="text" size="10" maxlength="40" name="weight" style:"right" /> <br />
+    <br />
+    You cooperated <input type="text" size="5" maxlength="5" name="cooperation" value="0" readonly="readonly" /> times.<br />
+    <br />
+</form>
+
+<button onclick="SubForm()"> Submit  </button>
+
+</p>
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-1171701-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script type="text/javascript" src="/google_cse_min.js" defer="defer"></script>
+</body>
+</html>
